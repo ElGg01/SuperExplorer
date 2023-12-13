@@ -1,0 +1,7 @@
+__pycache__/
+build/
+dist/
+Test/
+venv/
+app.spec
+generated-a741e77dfdef7054aa1ac619efafa7d7af290bb9fc7ebba7b3d2a88ff301b0b8.ico
