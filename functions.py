@@ -1,6 +1,7 @@
 import os
 import glob
 import shutil
+import re
 
 def eliminarCarpetasVacias(ruta):
     if ruta:
@@ -41,7 +42,11 @@ def organizarCarpetas(ruta):
         "--Internet--":["*.html", "*.xml", "*.url", "*.css", "*.css", "*.js", "*.php", "*.swf"],
         "--Ejecutables--":["*.exe"],
         "--Archivos temporales--":["*.sfk", "*.camrec"],
-        # "--Codigo--":["*.py"]
+        "--Codigo--":["*.py", "*.vim", "*.md"],
+        "--Desconocido--": ["*.mb", "*.abr"],
+        "--Minecraft--": ["*.mcpack"],
+        "--Packet_tracer--": ["*.pkt", "*.pka", "*.pksz"],
+        "--Drawio--": ["*.drawio", "*.dwg", "*.sv$"]
         }
 
         movidos = 0
@@ -51,10 +56,14 @@ def organizarCarpetas(ruta):
                 for formato in tiposDeArchivos[carpetaDeArchivo]:
                     archivos = glob.glob(os.path.join(ruta + "\\", formato))
                     for archivo in archivos:
+                        if os.path.exists(os.path.join(ruta, carpetaDeArchivo, os.path.basename(archivo))):
+                            nombre_sin_extension = re.match(r'(.+?)(\.\w+)?$', archivo).group(1)
+                            nuevo_nombre = nombre_sin_extension + "_Duplicado" + formato[1:]
+                            os.rename(archivo, nuevo_nombre)
+                            archivo = nuevo_nombre
                         shutil.move(archivo, os.path.join(ruta, carpetaDeArchivo))
                         movidos += 1
             else:
-                # os.mkdir(os.path.join(ruta, carpetaDeArchivo))
                 for formato in tiposDeArchivos[carpetaDeArchivo]:
                     archivos = glob.glob(os.path.join(ruta + "\\", formato))
                     if archivos and not (os.path.exists(os.path.join(ruta, carpetaDeArchivo))):
@@ -69,5 +78,3 @@ def organizarCarpetas(ruta):
     else:
         mensaje = "No has introducido una ruta."
         return True, mensaje
-
-organizarCarpetas(r"E:\ProyectosPython\SuperExplorer\Test")
